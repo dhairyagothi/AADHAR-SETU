@@ -1,0 +1,17 @@
+[
+  "total_bio_updates",
+  "total_demo_updates",
+  "total_enrollments",
+  "total_activity",
+  "bio_ratio",
+  "demo_ratio",
+  "enrol_ratio",
+  "update_to_enrol_ratio",
+  "activity_vs_district_mean",
+  "total_activity_mom_growth",
+  "total_activity_rolling_avg",
+  "total_activity_volatility",
+  "quality_weight",
+  "child_enrol_proportion",
+  "bio_child_proportion"
+]

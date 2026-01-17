@@ -1,0 +1,4 @@
+cluster_id,cluster_profile,pincode_count,state_nunique,district_nunique,total_activity_mean,total_activity_sum,total_bio_updates_mean,total_demo_updates_mean,total_enrollments_mean
+0,Enrollment-Focused - Growing,109201,36,985,335.93,36683755.0,152.43,161.83,21.67
+1,Update-Heavy - Established,108725,36,930,291.12,31651737.0,257.46,33.46,0.2
+2,High Activity - Well Maintained,10599,30,610,2667.93,28277414.0,1138.81,1365.63,163.49

@@ -1,0 +1,160 @@
+2026-01-16 21:12:08,244 - INFO - 
+================================================================================
+2026-01-16 21:12:08,244 - INFO - AADHAAR SETU - ML PIPELINE STARTED
+2026-01-16 21:12:08,245 - INFO - Run Timestamp: 2026-01-16_21-12-08
+2026-01-16 21:12:08,245 - INFO - Model Version: v1.0.0
+2026-01-16 21:12:08,246 - INFO - ================================================================================
+
+2026-01-16 21:12:08,246 - INFO - ================================================================================
+2026-01-16 21:12:08,247 - INFO - STAGE 1: LOADING AND VALIDATING DATA
+2026-01-16 21:12:08,248 - INFO - ================================================================================
+2026-01-16 21:12:08,248 - INFO - Loading: cleaned_data\master_cleaned.csv
+2026-01-16 21:12:09,373 - INFO -   Raw shape: (228525, 20)
+2026-01-16 21:12:09,374 - INFO -   Columns: ['year_month', 'state', 'district', 'pincode', 'updates_age_5_17_bio', 'updates_age_18_plus_bio', 'total_activity_bio', 'data_completeness_bio', 'data_quality_score_bio', 'updates_age_5_17_demo', 'updates_age_18_plus_demo', 'total_activity_demo', 'data_completeness_demo', 'data_quality_score_demo', 'enrollments_age_0_5', 'enrollments_age_5_17', 'enrollments_age_18_plus', 'total_activity', 'data_completeness', 'data_quality_score']
+2026-01-16 21:12:09,375 - INFO -   Activity columns found: 7
+2026-01-16 21:12:09,512 - INFO -   Rows with low quality (<50.0): 104594
+2026-01-16 21:12:09,514 - INFO -   [OK] Data validated. Final shape: (228525, 22)
+2026-01-16 21:12:09,515 - INFO - 
+================================================================================
+2026-01-16 21:12:09,516 - INFO - STAGE 2: FEATURE ENGINEERING
+2026-01-16 21:12:09,516 - INFO - ================================================================================
+2026-01-16 21:12:09,598 - INFO -   Biometric columns: ['updates_age_5_17_bio', 'updates_age_18_plus_bio']
+2026-01-16 21:12:09,599 - INFO -   Demographic columns: ['updates_age_5_17_demo', 'updates_age_18_plus_demo']
+2026-01-16 21:12:09,600 - INFO -   Enrolment columns: ['enrollments_age_0_5', 'enrollments_age_5_17', 'enrollments_age_18_plus']
+2026-01-16 21:12:09,600 - INFO -   Creating total activity features...
+2026-01-16 21:12:09,840 - INFO -   Creating activity ratio features...
+2026-01-16 21:12:09,869 - INFO -   Creating age-group proportion features...
+2026-01-16 21:12:09,894 - INFO -   Creating location-level statistics...
+2026-01-16 21:12:10,207 - INFO -   Creating temporal features...
+2026-01-16 21:14:46,470 - INFO -   Creating data quality weight...
+2026-01-16 21:14:46,539 - INFO -   [OK] Created 15 ML features
+2026-01-16 21:14:46,552 - INFO - 
+================================================================================
+2026-01-16 21:14:46,553 - INFO - STAGE 3: FEATURE SCALING
+2026-01-16 21:14:46,554 - INFO - ================================================================================
+2026-01-16 21:14:46,671 - INFO -   Feature matrix shape: (228525, 15)
+2026-01-16 21:14:46,672 - INFO -   Features: ['total_bio_updates', 'total_demo_updates', 'total_enrollments', 'total_activity', 'bio_ratio', 'demo_ratio', 'enrol_ratio', 'update_to_enrol_ratio', 'activity_vs_district_mean', 'total_activity_mom_growth', 'total_activity_rolling_avg', 'total_activity_volatility', 'quality_weight', 'child_enrol_proportion', 'bio_child_proportion']
+2026-01-16 21:14:46,775 - INFO -   [OK] Features scaled using StandardScaler
+2026-01-16 21:14:46,779 - INFO - 
+================================================================================
+2026-01-16 21:14:46,780 - INFO - STAGE 4: REGIONAL PROFILING (K-MEANS CLUSTERING)
+2026-01-16 21:14:46,780 - INFO - ================================================================================
+2026-01-16 21:14:46,781 - INFO -   Finding optimal K...
+2026-01-16 21:34:58,261 - INFO -     K=3: Silhouette Score = 0.3625
+2026-01-16 21:53:57,231 - INFO -     K=4: Silhouette Score = 0.3607
+2026-01-16 22:11:01,899 - INFO -     K=5: Silhouette Score = 0.3248
+2026-01-16 22:27:52,310 - INFO -     K=6: Silhouette Score = 0.3471
+2026-01-16 22:44:12,803 - INFO -     K=7: Silhouette Score = 0.3431
+2026-01-16 23:00:12,232 - INFO -     K=8: Silhouette Score = 0.3355
+2026-01-16 23:00:12,246 - INFO -   [OK] Optimal K = 3
+2026-01-16 23:00:12,249 - INFO -   Training K-Means with K=3...
+2026-01-16 23:00:14,171 - INFO - 
+  Cluster Statistics:
+2026-01-16 23:00:14,174 - INFO -     Cluster 0: 109201 locations, Avg Activity: 336
+2026-01-16 23:00:14,175 - INFO -     Cluster 1: 108725 locations, Avg Activity: 291
+2026-01-16 23:00:14,175 - INFO -     Cluster 2: 10599 locations, Avg Activity: 2668
+2026-01-16 23:16:48,222 - INFO - 
+  [OK] Clustering complete. Silhouette Score: 0.3625
+2026-01-16 23:16:48,227 - INFO - 
+================================================================================
+2026-01-16 23:16:48,228 - INFO - STAGE 5: SERVICE GAP DETECTION (ISOLATION FOREST)
+2026-01-16 23:16:48,229 - INFO - ================================================================================
+2026-01-16 23:16:48,230 - INFO -   Training Isolation Forest (contamination=0.1)...
+2026-01-16 23:17:00,440 - INFO - 
+  Risk Distribution:
+2026-01-16 23:17:00,441 - INFO -     NORMAL: 159968 locations (70.0%)
+2026-01-16 23:17:00,442 - INFO -     LOW: 34279 locations (15.0%)
+2026-01-16 23:17:00,443 - INFO -     HIGH: 11428 locations (5.0%)
+2026-01-16 23:17:00,443 - INFO -     MEDIUM: 11425 locations (5.0%)
+2026-01-16 23:17:00,443 - INFO -     CRITICAL: 11425 locations (5.0%)
+2026-01-16 23:17:00,447 - INFO - 
+  [OK] Detected 22853 anomalous locations (10.0%)
+2026-01-16 23:17:00,448 - INFO - 
+================================================================================
+2026-01-16 23:17:00,449 - INFO - STAGE 6: TREND ANALYSIS & EARLY WARNING
+2026-01-16 23:17:00,449 - INFO - ================================================================================
+2026-01-16 23:17:00,450 - INFO -   Calculating Z-scores for trend deviation...
+2026-01-16 23:17:03,616 - INFO -   Detecting activity drops and spikes...
+2026-01-16 23:17:07,719 - INFO - 
+  Trend Distribution:
+2026-01-16 23:17:07,720 - INFO -     STABLE: 140156 (61.3%)
+2026-01-16 23:17:07,720 - INFO -     SURGING: 45725 (20.0%)
+2026-01-16 23:17:07,720 - INFO -     DECLINING: 37123 (16.2%)
+2026-01-16 23:17:07,721 - INFO -     UNUSUAL: 5521 (2.4%)
+2026-01-16 23:17:07,722 - INFO - 
+  [OK] Trend analysis complete. Drops: 37123, Spikes: 45725
+2026-01-16 23:17:07,731 - INFO - 
+================================================================================
+2026-01-16 23:17:07,732 - INFO - STAGE 7: INSIGHT GENERATION (EXPLAINABILITY)
+2026-01-16 23:17:07,732 - INFO - ================================================================================
+2026-01-16 23:17:07,733 - INFO -   Generating cluster profile insights...
+2026-01-16 23:17:08,090 - INFO -   Generating risk explanations...
+2026-01-16 23:17:12,996 - INFO -   Generating location-specific insights...
+2026-01-16 23:17:19,854 - INFO - 
+  Cluster Profile Distribution:
+2026-01-16 23:17:19,855 - INFO -     Enrollment-Focused - Growing: 109201 (47.8%)
+2026-01-16 23:17:19,855 - INFO -     Update-Heavy - Established: 108725 (47.6%)
+2026-01-16 23:17:19,856 - INFO -     High Activity - Well Maintained: 10599 (4.6%)
+2026-01-16 23:17:19,856 - INFO - 
+  [OK] Generated insights for 228525 locations
+2026-01-16 23:17:19,857 - INFO - 
+================================================================================
+2026-01-16 23:17:19,857 - INFO - STAGE 8: OUTPUT GENERATION
+2026-01-16 23:17:19,857 - INFO - ================================================================================
+2026-01-16 23:17:19,867 - INFO -   Exporting full ML output table...
+2026-01-16 23:17:27,986 - INFO -     Saved: ml_full_output.csv (228525 rows)
+2026-01-16 23:17:27,987 - INFO -   Exporting cluster summary table...
+2026-01-16 23:17:28,125 - INFO -     Saved: cluster_summary.csv
+2026-01-16 23:17:28,126 - INFO -   Exporting high-risk region table...
+2026-01-16 23:17:28,461 - INFO -     Saved: high_risk_regions.csv (22853 regions)
+2026-01-16 23:17:28,462 - INFO -   Exporting monthly alert table...
+2026-01-16 23:17:29,201 - INFO -     Saved: monthly_alerts.csv (92902 alerts)
+2026-01-16 23:17:29,201 - INFO -   Exporting state-level summary...
+2026-01-16 23:17:29,285 - INFO -     Saved: state_summary.csv
+2026-01-16 23:17:29,286 - INFO -   Exporting metadata...
+2026-01-16 23:17:29,407 - INFO -     Saved: ml_metadata.json
+2026-01-16 23:17:29,408 - INFO - 
+  [OK] All outputs saved to ml_outputs/
+2026-01-16 23:17:29,427 - INFO - 
+================================================================================
+2026-01-16 23:17:29,428 - INFO - STAGE 10: GENERATING ML VISUALIZATIONS
+2026-01-16 23:17:29,428 - INFO - ================================================================================
+2026-01-16 23:17:29,430 - INFO -   Creating Cluster Analysis Dashboard...
+2026-01-17 00:50:55,599 - INFO -     Saved: cluster_analysis_dashboard.png
+2026-01-17 00:50:55,601 - INFO -   Creating Anomaly Detection Dashboard...
+2026-01-17 00:50:58,914 - INFO -     Saved: anomaly_detection_dashboard.png
+2026-01-17 00:50:58,915 - INFO -   Creating Trend Analysis Dashboard...
+2026-01-17 00:51:01,186 - INFO -     Saved: trend_analysis_dashboard.png
+2026-01-17 00:51:01,187 - INFO -   Creating Model Insights Dashboard...
+2026-01-17 00:51:04,294 - INFO -     Saved: model_insights_dashboard.png
+2026-01-17 00:51:04,295 - INFO -   Creating Executive Summary Dashboard...
+2026-01-17 00:51:07,682 - INFO -     Saved: executive_summary.png
+2026-01-17 00:51:07,683 - INFO - 
+  [OK] All visualizations saved to ml_outputs\figures/
+2026-01-17 00:51:07,685 - INFO - 
+================================================================================
+2026-01-17 00:51:07,685 - INFO - STAGE 9: MODEL PERSISTENCE
+2026-01-17 00:51:07,685 - INFO - ================================================================================
+2026-01-17 00:51:07,689 - INFO -   Saved: scaler.pkl
+2026-01-17 00:51:07,696 - INFO -   Saved: kmeans_model.pkl
+2026-01-17 00:51:07,727 - INFO -   Saved: isolation_forest_model.pkl
+2026-01-17 00:51:07,729 - INFO -   Saved: feature_columns.json
+2026-01-17 00:51:07,730 - INFO - 
+  [OK] All models saved to ml_models/
+2026-01-17 00:51:07,731 - INFO - 
+================================================================================
+2026-01-17 00:51:07,731 - INFO - ML PIPELINE COMPLETED SUCCESSFULLY
+2026-01-17 00:51:07,732 - INFO - ================================================================================
+2026-01-17 00:51:07,732 - INFO - 
+SUMMARY:
+2026-01-17 00:51:07,733 - INFO -   Total Locations Analyzed: 228,525
+2026-01-17 00:51:07,734 - INFO -   Clusters Created: 3
+2026-01-17 00:51:07,735 - INFO -   High Risk Regions: 22,853
+2026-01-17 00:51:07,735 - INFO -   Drop Alerts: 37,123
+2026-01-17 00:51:07,736 - INFO -   Spike Alerts: 45,725
+2026-01-17 00:51:07,736 - INFO - 
+Outputs saved to: ml_outputs/
+2026-01-17 00:51:07,737 - INFO - Figures saved to: ml_outputs\figures/
+2026-01-17 00:51:07,738 - INFO - Models saved to: ml_models/
+2026-01-17 00:51:07,740 - INFO - ================================================================================
+

@@ -1,0 +1,65 @@
+{
+  "run_timestamp": "2026-01-16_21-12-08",
+  "data_version": "v1.0_cleaned",
+  "model_version": "v1.0.0",
+  "configuration": {
+    "n_clusters": 3,
+    "contamination_rate": 0.1,
+    "zscore_threshold": 2.0,
+    "drop_threshold": -0.3,
+    "spike_threshold": 0.5
+  },
+  "statistics": {
+    "total_locations": 228525,
+    "unique_states": 36,
+    "unique_districts": 993,
+    "unique_pincodes": 19814,
+    "total_activity": 96612906,
+    "anomaly_count": 22853,
+    "high_risk_count": 22853,
+    "drop_alert_count": 37123,
+    "spike_alert_count": 45725
+  },
+  "cluster_distribution": {
+    "Enrollment-Focused - Growing": 109201,
+    "Update-Heavy - Established": 108725,
+    "High Activity - Well Maintained": 10599
+  },
+  "risk_distribution": {
+    "NORMAL": 159968,
+    "LOW": 34279,
+    "HIGH": 11428,
+    "MEDIUM": 11425,
+    "CRITICAL": 11425
+  },
+  "trend_distribution": {
+    "STABLE": 140156,
+    "SURGING": 45725,
+    "DECLINING": 37123,
+    "UNUSUAL": 5521
+  },
+  "feature_columns": [
+    "total_bio_updates",
+    "total_demo_updates",
+    "total_enrollments",
+    "total_activity",
+    "bio_ratio",
+    "demo_ratio",
+    "enrol_ratio",
+    "update_to_enrol_ratio",
+    "activity_vs_district_mean",
+    "total_activity_mom_growth",
+    "total_activity_rolling_avg",
+    "total_activity_volatility",
+    "quality_weight",
+    "child_enrol_proportion",
+    "bio_child_proportion"
+  ],
+  "output_files": [
+    "ml_full_output.csv",
+    "cluster_summary.csv",
+    "high_risk_regions.csv",
+    "monthly_alerts.csv",
+    "state_summary.csv"
+  ]
+}
